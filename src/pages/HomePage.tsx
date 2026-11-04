@@ -5,6 +5,7 @@ import { Project, SiteConfig } from '../types/portfolio';
 import { portfolioApi } from '../services/api';
 import { ProjectCard } from '../components/ProjectCard';
 import { SmartImage } from '../components/SmartImage';
+import { normalizeImageUrl } from '../services/imageUtils';
 import heroFallback from '../assets/images/hero_ai_platform_1793785173723.jpg';
 
 
@@ -103,16 +104,12 @@ export const HomePage: React.FC<HomePageProps> = ({ siteConfig }) => {
             {/* Right Column: Hero Visual Container */}
             <div className="lg:col-span-5">
               <div className="relative rounded-xl overflow-hidden border border-neutral-800 bg-neutral-900 shadow-2xl">
-                <SmartImage
-                  src={siteConfig.hero_image || heroFallback}
+                <img
+                  src={siteConfig.hero_image ? normalizeImageUrl(siteConfig.hero_image) : heroFallback}
                   alt="Codeless Technologies AI Computing Architecture"
-                  fallbackTitle="AI Architecture"
-                  aspectRatioClass="aspect-[16/11]"
-                  className="w-full h-full object-cover"
+                  className="w-full h-auto block"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-neutral-950/80 via-transparent to-transparent pointer-events-none" />
-                
-                {/* Visual Label */}
                 <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between text-xs font-mono text-neutral-300 pointer-events-none">
                   <span>NEURAL COMPUTE PLATFORM</span>
                   <span className="text-neutral-500">v2.4 CORE</span>
