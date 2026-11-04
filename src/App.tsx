@@ -5,7 +5,6 @@ import { portfolioApi } from './services/api';
 import { INITIAL_SITE_CONFIG } from './services/mockData';
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
-import { AdminApiModal } from './components/AdminApiModal';
 import { HomePage } from './pages/HomePage';
 import { ProjectsPage } from './pages/ProjectsPage';
 import { ProjectDetailPage } from './pages/ProjectDetailPage';
@@ -24,17 +23,9 @@ function ScrollToTop() {
 
 export default function App() {
   const [siteConfig, setSiteConfig] = useState<SiteConfig>(INITIAL_SITE_CONFIG);
-  const [isAdminModalOpen, setIsAdminModalOpen] = useState(false);
-  const [apiStatus, setApiStatus] = useState(portfolioApi.getStatus());
-
-  const refreshSiteData = async () => {
-    const config = await portfolioApi.getSiteConfig();
-    setSiteConfig(config);
-    setApiStatus(portfolioApi.getStatus());
-  };
 
   useEffect(() => {
-    refreshSiteData();
+    portfolioApi.getSiteConfig().then(setSiteConfig);
   }, []);
 
   return (
@@ -43,10 +34,7 @@ export default function App() {
       <div className="min-h-screen flex flex-col bg-neutral-950 text-neutral-100 selection:bg-neutral-800 selection:text-white">
         
         {/* Navigation Bar */}
-        <Navbar
-          onOpenAdminModal={() => setIsAdminModalOpen(true)}
-          isLiveApiConnected={apiStatus.isConfigured}
-        />
+        <Navbar />
 
         {/* Main Content Area */}
         <main className="flex-1">
@@ -62,17 +50,7 @@ export default function App() {
         </main>
 
         {/* Footer */}
-        <Footer
-          siteConfig={siteConfig}
-          onOpenAdminModal={() => setIsAdminModalOpen(true)}
-        />
-
-        {/* Admin API & Google Sheets Configuration Modal */}
-        <AdminApiModal
-          isOpen={isAdminModalOpen}
-          onClose={() => setIsAdminModalOpen(false)}
-          onDataRefreshed={refreshSiteData}
-        />
+        <Footer siteConfig={siteConfig} />
 
       </div>
     </BrowserRouter>

@@ -1,13 +1,8 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, Database } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 
-interface NavbarProps {
-  onOpenAdminModal: () => void;
-  isLiveApiConnected?: boolean;
-}
-
-export const Navbar: React.FC<NavbarProps> = ({ onOpenAdminModal, isLiveApiConnected = false }) => {
+export const Navbar: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
 
@@ -28,15 +23,12 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenAdminModal, isLiveApiConne
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between gap-8 h-18">
           
-          {/* Zone 1: Single text element wordmark */}
+          {/* Zone 1: Wordmark */}
           <Link 
             to="/" 
-            className="flex items-center gap-2.5 text-lg font-bold tracking-tight text-white hover:text-neutral-200 transition-colors whitespace-nowrap shrink-0 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-400"
+            className="text-lg font-bold tracking-tight text-white hover:text-neutral-200 transition-colors whitespace-nowrap shrink-0 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-400"
           >
-            <div className="w-7 h-7 rounded-sm bg-neutral-100 flex items-center justify-center text-neutral-950 font-black text-sm tracking-tighter">
-              CT
-            </div>
-            <span>Codeless Technologies</span>
+            Codeless
           </Link>
 
           {/* Zone 2: 4–5 clean single-line text navigation links */}
@@ -55,14 +47,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenAdminModal, isLiveApiConne
               </Link>
             ))}
 
-            <button
-              onClick={onOpenAdminModal}
-              title="Google Sheets API & Admin Settings"
-              className="flex items-center gap-1.5 text-xs text-neutral-400 hover:text-white transition-colors cursor-pointer py-1 px-2 rounded border border-neutral-800 hover:border-neutral-700 whitespace-nowrap shrink-0"
-            >
-              <Database className="w-3.5 h-3.5" />
-              <span>{isLiveApiConnected ? 'Sheets Live' : 'Sheet Sync'}</span>
-            </button>
+
           </nav>
 
           {/* Zone 3: 1 primary action */}
@@ -105,19 +90,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenAdminModal, isLiveApiConne
                 {link.label}
               </Link>
             ))}
-            <button
-              onClick={() => {
-                setMobileMenuOpen(false);
-                onOpenAdminModal();
-              }}
-              className="flex items-center justify-between px-3 py-2 text-sm text-neutral-400 hover:text-white hover:bg-neutral-900/50 rounded-md text-left"
-            >
-              <span className="flex items-center gap-2">
-                <Database className="w-4 h-4" />
-                Google Sheets Connection
-              </span>
-              <span className="text-xs text-neutral-400">{isLiveApiConnected ? 'Live' : 'Config'}</span>
-            </button>
+
           </nav>
 
           <div className="pt-2">

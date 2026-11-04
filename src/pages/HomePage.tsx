@@ -1,21 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { 
-  ArrowRight, 
-  ArrowUpRight, 
-  Cpu, 
-  Mic, 
-  Code2, 
-  Layers, 
-  Workflow, 
-  Smartphone, 
-  FileCheck2, 
-  MessageSquare, 
-  CheckCircle, 
-  Database,
-  Terminal,
-  Activity
-} from 'lucide-react';
+import { ArrowRight, Cpu, Mic, Workflow, MessageSquare } from 'lucide-react';
 import { Project, SiteConfig } from '../types/portfolio';
 import { portfolioApi } from '../services/api';
 import { ProjectCard } from '../components/ProjectCard';
@@ -43,77 +28,7 @@ export const HomePage: React.FC<HomePageProps> = ({ siteConfig }) => {
     };
   }, []);
 
-  const capabilities = [
-    {
-      index: "01",
-      title: "Artificial Intelligence & Machine Learning",
-      description: "Custom model training, quantization, inference optimization, and predictive intelligence tailored to enterprise datasets.",
-      icon: Cpu,
-    },
-    {
-      index: "02",
-      title: "AI Voice Agents & Conversational Systems",
-      description: "Sub-200ms ultra-low latency bidirectional speech synthesis, real-time telephony voicebots, and natural dialogue agents.",
-      icon: Mic,
-    },
-    {
-      index: "03",
-      title: "Custom Software Development",
-      description: "Mission-critical, resilient backend platforms, microservices architecture, and clean APIs engineered for high-throughput workloads.",
-      icon: Code2,
-    },
-    {
-      index: "04",
-      title: "SaaS Product Engineering",
-      description: "Multi-tenant cloud platforms, subscription lifecycle management, and scalable web architectures built for rapid iteration.",
-      icon: Layers,
-    },
-    {
-      index: "05",
-      title: "Business Process Automation",
-      description: "Automated event-driven pipelines, intelligent document parsing, ERP bridges, and robotic operational orchestration.",
-      icon: Workflow,
-    },
-    {
-      index: "06",
-      title: "Web & Mobile Applications",
-      description: "High-performance responsive web applications, progressive mobile apps, and fluid cross-platform digital experiences.",
-      icon: Smartphone,
-    },
-    {
-      index: "07",
-      title: "Pharmaceutical Technology & QMS",
-      description: "Regulatory-compliant software, 21 CFR Part 11 electronic batch records, deviation tracking, and audit verification systems.",
-      icon: FileCheck2,
-    },
-  ];
 
-  const whyChoosePrinciples = [
-    {
-      title: "AI-First Approach",
-      description: "We don't merely bolt on AI as an afterthought. We architect systems from the ground up around intelligent workflows and cognitive models.",
-    },
-    {
-      title: "Practical Business Solutions",
-      description: "We focus on real operational utility: reducing cycle times, eliminating manual data entry, and unlocking new revenue opportunities.",
-    },
-    {
-      title: "Custom Product Engineering",
-      description: "Beyond routine agency development, we design and build proprietary technology platforms engineered for maintainability.",
-    },
-    {
-      title: "Scalable Architecture",
-      description: "Clean separation of concerns, resilient microservices, and asynchronous message queues that handle exponential growth without friction.",
-    },
-    {
-      title: "Modern Technology Stack",
-      description: "Engineered with cutting-edge runtimes (Python, FastAPI, TypeScript, Go, Rust, React, ONNX) optimized for speed and reliability.",
-    },
-    {
-      title: "Continuous Innovation",
-      description: "Relentless research into new foundation models, acoustic neural synthesizers, and regulatory compliance standards.",
-    },
-  ];
 
   return (
     <div className="space-y-24 sm:space-y-32 pb-24">
@@ -208,36 +123,22 @@ export const HomePage: React.FC<HomePageProps> = ({ siteConfig }) => {
         </div>
       </section>
 
-      {/* =========================================================================
-          SECTION C: FEATURED PROJECTS
-          Fetched dynamically from Google Sheets (published=true & featured=true)
-          ========================================================================= */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-neutral-800 pb-6">
-          <div>
-            <div className="text-xs font-mono uppercase tracking-widest text-neutral-400 mb-1">
-              PORTFOLIO SHOWCASE
-            </div>
-            <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
-              Featured Projects
-            </h2>
-            <p className="text-sm text-neutral-400 mt-1 max-w-xl">
-              Production systems and proprietary software platforms engineered by Codeless Technologies.
-            </p>
+      {/* SECTION C: FEATURED PROJECTS */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+        <div className="border-b border-neutral-800 pb-6">
+          <div className="text-xs font-mono uppercase tracking-widest text-neutral-400 mb-1">
+            PORTFOLIO SHOWCASE
           </div>
-
-          <Link
-            to="/projects"
-            className="inline-flex items-center gap-2 text-xs font-semibold text-white hover:text-neutral-300 transition-colors py-2"
-          >
-            <span>View All Projects</span>
-            <ArrowRight className="w-4 h-4" />
-          </Link>
+          <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
+            Featured Projects
+          </h2>
+          <p className="text-sm text-neutral-400 mt-1 max-w-xl">
+            Production systems and proprietary software platforms engineered by Codeless Technologies.
+          </p>
         </div>
 
-        {/* Dynamic Project Grid */}
         {loading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[1, 2, 3].map((n) => (
               <div key={n} className="bg-neutral-900/60 border border-neutral-800 rounded-lg p-6 space-y-4 animate-pulse">
                 <div className="w-full aspect-[16/10] bg-neutral-800 rounded" />
@@ -248,57 +149,29 @@ export const HomePage: React.FC<HomePageProps> = ({ siteConfig }) => {
             ))}
           </div>
         ) : featuredProjects.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {featuredProjects.map((project) => (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {featuredProjects.slice(0, 3).map((project) => (
               <ProjectCard key={project.project_id} project={project} />
             ))}
           </div>
         ) : (
           <div className="p-12 text-center border border-neutral-800 rounded-lg bg-neutral-900/30">
-            <p className="text-sm text-neutral-400">No featured projects found in Google Sheets.</p>
+            <p className="text-sm text-neutral-400">No featured projects found.</p>
           </div>
         )}
-      </section>
 
-      {/* =========================================================================
-          SECTION D: WHAT WE BUILD (PRIMARY CAPABILITY AREAS)
-          ========================================================================= */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
-        <div className="space-y-2 border-b border-neutral-800 pb-6">
-          <div className="text-xs font-mono uppercase tracking-widest text-neutral-400">
-            ENGINEERING CAPABILITIES
-          </div>
-          <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
-            What We Build
-          </h2>
-          <p className="text-sm text-neutral-400 max-w-2xl">
-            We combine artificial intelligence, machine learning, and disciplined software engineering to solve high-impact technical problems.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {capabilities.map((cap) => {
-            const Icon = cap.icon;
-            return (
-              <div
-                key={cap.index}
-                className="group p-6 bg-neutral-900/40 border border-neutral-800/80 rounded-lg hover:border-neutral-700 transition-all duration-200 space-y-3"
-              >
-                <div className="flex items-center justify-between text-xs font-mono text-neutral-400">
-                  <span className="text-white font-semibold">{cap.index}</span>
-                  <Icon className="w-4 h-4 text-neutral-400 group-hover:text-white transition-colors" />
-                </div>
-                <h3 className="text-base font-bold text-white tracking-tight">
-                  {cap.title}
-                </h3>
-                <p className="text-sm text-neutral-400 leading-relaxed">
-                  {cap.description}
-                </p>
-              </div>
-            );
-          })}
+        <div className="flex justify-center pt-2">
+          <Link
+            to="/projects"
+            className="inline-flex items-center gap-2 px-6 py-3 text-xs font-semibold text-white bg-neutral-900 border border-neutral-800 hover:border-neutral-700 hover:bg-neutral-800 rounded-md transition-colors"
+          >
+            <span>View All Projects</span>
+            <ArrowRight className="w-4 h-4" />
+          </Link>
         </div>
       </section>
+
+
 
       {/* =========================================================================
           SECTION E: ABOUT CODELESS TECHNOLOGIES OVERVIEW
@@ -341,7 +214,14 @@ export const HomePage: React.FC<HomePageProps> = ({ siteConfig }) => {
                 </div>
                 <div>
                   <span className="text-neutral-400 block text-xs">Global Domain:</span>
-                  <span className="font-mono text-xs text-neutral-300">portfolio.codelessai.in</span>
+                  <a
+                    href="https://codelessai.in"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-mono text-xs text-neutral-300 hover:text-white underline underline-offset-2 transition-colors"
+                  >
+                    codelessai.in
+                  </a>
                 </div>
               </div>
             </div>
@@ -350,36 +230,7 @@ export const HomePage: React.FC<HomePageProps> = ({ siteConfig }) => {
         </div>
       </section>
 
-      {/* =========================================================================
-          SECTION F: WHY CHOOSE CODELESS TECHNOLOGIES
-          ========================================================================= */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
-        <div className="space-y-2 border-b border-neutral-800 pb-6">
-          <div className="text-xs font-mono uppercase tracking-widest text-neutral-400">
-            ENGINEERING DISCIPLINE
-          </div>
-          <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
-            Why Choose Codeless Technologies
-          </h2>
-          <p className="text-sm text-neutral-400 max-w-2xl">
-            Our architectural standards and operating principles guarantee software that is maintainable, performant, and aligned with measurable business objectives.
-          </p>
-        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {whyChoosePrinciples.map((item, idx) => (
-            <div key={idx} className="space-y-2.5">
-              <div className="text-xs font-mono text-neutral-400">0{idx + 1}.</div>
-              <h3 className="text-lg font-bold text-white tracking-tight">
-                {item.title}
-              </h3>
-              <p className="text-sm text-neutral-400 leading-relaxed">
-                {item.description}
-              </p>
-            </div>
-          ))}
-        </div>
-      </section>
 
       {/* =========================================================================
           SECTION G: PROJECT INQUIRY CTA

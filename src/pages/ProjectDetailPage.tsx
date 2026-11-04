@@ -102,11 +102,13 @@ export const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({ siteConfig
   }
 
   // Build gallery from image_1/2/3 — only include non-empty URLs
-  const galleryItems: LightboxItem[] = [
-    project.image_1 ? { url: project.image_1, caption: project.image_1_caption } : null,
-    project.image_2 ? { url: project.image_2, caption: project.image_2_caption } : null,
-    project.image_3 ? { url: project.image_3, caption: project.image_3_caption } : null,
-  ].filter((item): item is LightboxItem => item !== null && item.url.trim() !== '');
+  const galleryItems: LightboxItem[] = (
+    [
+      project.image_1 ? { url: project.image_1, caption: project.image_1_caption } : null,
+      project.image_2 ? { url: project.image_2, caption: project.image_2_caption } : null,
+      project.image_3 ? { url: project.image_3, caption: project.image_3_caption } : null,
+    ] as Array<LightboxItem | null>
+  ).filter((item): item is LightboxItem => item !== null && item.url.trim() !== '');
 
   const openLightbox = (index: number) => {
     setActiveMediaIndex(index);
