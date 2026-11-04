@@ -1,21 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { 
-  ArrowLeft, 
-  ExternalLink, 
-  Github, 
-  Globe, 
-  MessageSquare, 
-  CheckCircle2, 
+import {
+  ArrowLeft,
+  ExternalLink,
+  Github,
+  MessageSquare,
   Maximize2,
   Calendar,
-  Layers,
   ArrowRight
 } from 'lucide-react';
-import { Project, ProjectDetail, ProjectMedia, SiteConfig } from '../types/portfolio';
+import { Project, SiteConfig } from '../types/portfolio';
 import { portfolioApi } from '../services/api';
 import { SmartImage } from '../components/SmartImage';
-import { Lightbox } from '../components/Lightbox';
+import { Lightbox, LightboxItem } from '../components/Lightbox';
 import { ProjectCard } from '../components/ProjectCard';
 
 interface ProjectDetailPageProps {
@@ -27,12 +24,9 @@ export const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({ siteConfig
   const navigate = useNavigate();
 
   const [project, setProject] = useState<Project | null>(null);
-  const [details, setDetails] = useState<ProjectDetail[]>([]);
-  const [media, setMedia] = useState<ProjectMedia[]>([]);
   const [relatedProjects, setRelatedProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Lightbox state
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [activeMediaIndex, setActiveMediaIndex] = useState(0);
 
@@ -48,36 +42,26 @@ export const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({ siteConfig
     portfolioApi.getProjectBySlug(slug).then(async (result) => {
       if (!mounted) return;
 
-      if (!result || !result.project) {
+      if (!result) {
         setProject(null);
         setLoading(false);
         return;
       }
 
-      setProject(result.project);
-      setDetails(result.details);
-      setMedia(result.media);
+      setProject(result);
 
-      // Fetch related projects by category or shared tech
       const allProjects = await portfolioApi.getProjects();
       if (mounted) {
         const related = allProjects
-          .filter((p) => p.slug !== result.project.slug && p.published)
-          .filter((p) => {
-            const sameCat = p.category === result.project.category;
-            const sharedTech = p.technologies?.some((t) => result.project.technologies?.includes(t));
-            return sameCat || sharedTech;
-          })
+          .filter(p => p.slug !== result.slug && p.published)
+          .filter(p => p.category === result.category || p.technologies?.some(t => result.technologies?.includes(t)))
           .slice(0, 3);
-
         setRelatedProjects(related);
         setLoading(false);
       }
     });
 
-    return () => {
-      mounted = false;
-    };
+    return () => { mounted = false; };
   }, [slug, navigate]);
 
   if (loading) {
@@ -117,30 +101,12 @@ export const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({ siteConfig
     );
   }
 
-  // Extract sections from details
-  const overviewSection = details.find((d) => d.section_type === 'overview');
-  const problemSection = details.find((d) => d.section_type === 'problem');
-  const solutionSection = details.find((d) => d.section_type === 'solution');
-  const featuresSection = details.find((d) => d.section_type === 'features');
-  const architectureSection = details.find((d) => d.section_type === 'architecture');
-  const outcomesSection = details.find((d) => d.section_type === 'outcomes');
-  const additionalSections = details.filter((d) => d.section_type === 'additional');
-
-  // Parse features content safely
-  const parsedFeatures: string[] = (() => {
-    if (!featuresSection?.content) return [];
-    try {
-      const parsed = JSON.parse(featuresSection.content);
-      if (Array.isArray(parsed)) return parsed;
-    } catch {
-      // split by newline or semicolons
-      return featuresSection.content
-        .split(/\n|;/)
-        .map((s) => s.trim().replace(/^[-*•]\s*/, ''))
-        .filter(Boolean);
-    }
-    return [featuresSection.content];
-  })();
+  // Build gallery from image_1/2/3 — only include non-empty URLs
+  const galleryItems: LightboxItem[] = [
+    project.image_1 ? { url: project.image_1, caption: project.image_1_caption } : null,
+    project.image_2 ? { url: project.image_2, caption: project.image_2_caption } : null,
+    project.image_3 ? { url: project.image_3, caption: project.image_3_caption } : null,
+  ].filter((item): item is LightboxItem => item !== null && item.url.trim() !== '');
 
   const openLightbox = (index: number) => {
     setActiveMediaIndex(index);
@@ -149,7 +115,7 @@ export const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({ siteConfig
 
   return (
     <div className="space-y-16 sm:space-y-24 pb-24">
-      
+
       {/* Top Back Navigation Bar */}
       <div className="border-b border-neutral-900 bg-neutral-950/50 py-4">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -164,12 +130,10 @@ export const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({ siteConfig
       </div>
 
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16 sm:space-y-20">
-        
-        {/* =========================================================================
-            SECTION A: PROJECT HERO
-            ========================================================================= */}
+
+        {/* SECTION A: PROJECT HERO */}
         <section className="space-y-8">
-          
+
           {/* Metadata bar */}
           <div className="flex flex-wrap items-center gap-2 text-xs font-mono text-neutral-400">
             <span className="text-white uppercase tracking-wider">{project.category}</span>
@@ -192,7 +156,7 @@ export const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({ siteConfig
             )}
           </div>
 
-          {/* Project Title and Tagline */}
+          {/* Title and Tagline */}
           <div className="space-y-3">
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight">
               {project.project_name}
@@ -207,10 +171,7 @@ export const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({ siteConfig
             {project.short_description}
           </p>
 
-          {/* =========================================================================
-              SECTION B: CONDITIONAL PROJECT ACTION BUTTONS
-              Only displayed when URLs exist and are valid.
-              ========================================================================= */}
+          {/* Action Buttons */}
           <div className="flex flex-wrap items-center gap-3 pt-2">
             {project.live_url && project.live_url.trim() !== '' && (
               <a
@@ -223,7 +184,6 @@ export const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({ siteConfig
                 <ExternalLink className="w-3.5 h-3.5" />
               </a>
             )}
-
             {project.github_url && project.github_url.trim() !== '' && (
               <a
                 href={project.github_url}
@@ -235,7 +195,6 @@ export const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({ siteConfig
                 <span>GitHub Repository</span>
               </a>
             )}
-
             <Link
               to="/contact"
               className="px-4 py-2.5 text-xs text-neutral-400 hover:text-white transition-colors inline-flex items-center gap-1.5"
@@ -255,12 +214,9 @@ export const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({ siteConfig
               className="w-full h-full object-cover"
             />
           </div>
-
         </section>
 
-        {/* =========================================================================
-            SECTION G: TECHNOLOGY STACK
-            ========================================================================= */}
+        {/* SECTION B: TECHNOLOGY STACK */}
         <section className="space-y-4 border-t border-neutral-800 pt-8">
           <div className="text-xs font-mono uppercase tracking-widest text-neutral-400">
             TECHNOLOGY STACK
@@ -277,89 +233,26 @@ export const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({ siteConfig
           </div>
         </section>
 
-        {/* =========================================================================
-            SECTION C: PROJECT OVERVIEW
-            ========================================================================= */}
+        {/* SECTION C: PROJECT OVERVIEW */}
         <section className="space-y-4 border-t border-neutral-800 pt-8">
           <div className="text-xs font-mono uppercase tracking-widest text-neutral-400">
             01. PROJECT OVERVIEW
           </div>
           <h2 className="text-2xl font-bold text-white tracking-tight">
-            {overviewSection?.heading || 'System Architecture & Scope'}
+            System Architecture & Scope
           </h2>
-          <div className="text-base text-neutral-300 leading-relaxed space-y-4">
-            <p>{overviewSection?.content || project.full_description}</p>
-          </div>
+          <p className="text-base text-neutral-300 leading-relaxed">
+            {project.full_description}
+          </p>
         </section>
 
-        {/* =========================================================================
-            SECTION D: PROBLEM STATEMENT
-            ========================================================================= */}
-        {problemSection && (
-          <section className="space-y-4 border-t border-neutral-800 pt-8">
-            <div className="text-xs font-mono uppercase tracking-widest text-neutral-400">
-              02. THE CHALLENGE
-            </div>
-            <h2 className="text-2xl font-bold text-white tracking-tight">
-              {problemSection.heading || 'Problem Statement'}
-            </h2>
-            <p className="text-base text-neutral-300 leading-relaxed">
-              {problemSection.content}
-            </p>
-          </section>
-        )}
-
-        {/* =========================================================================
-            SECTION E: OUR SOLUTION & ARCHITECTURE
-            ========================================================================= */}
-        {solutionSection && (
-          <section className="space-y-4 border-t border-neutral-800 pt-8">
-            <div className="text-xs font-mono uppercase tracking-widest text-neutral-400">
-              03. ENGINEERING SOLUTION
-            </div>
-            <h2 className="text-2xl font-bold text-white tracking-tight">
-              {solutionSection.heading || 'Our Implemented Solution'}
-            </h2>
-            <p className="text-base text-neutral-300 leading-relaxed">
-              {solutionSection.content}
-            </p>
-          </section>
-        )}
-
-        {/* =========================================================================
-            SECTION F: KEY FEATURES
-            ========================================================================= */}
-        {parsedFeatures.length > 0 && (
-          <section className="space-y-6 border-t border-neutral-800 pt-8">
-            <div className="text-xs font-mono uppercase tracking-widest text-neutral-400">
-              04. SPECIFICATIONS & FEATURES
-            </div>
-            <h2 className="text-2xl font-bold text-white tracking-tight">
-              {featuresSection?.heading || 'Key Platform Features'}
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {parsedFeatures.map((feat, idx) => (
-                <div
-                  key={idx}
-                  className="p-4 bg-neutral-900/60 border border-neutral-800/80 rounded-lg flex items-start gap-3"
-                >
-                  <CheckCircle2 className="w-4 h-4 text-neutral-300 mt-0.5 shrink-0" />
-                  <span className="text-sm text-neutral-300 leading-relaxed">{feat}</span>
-                </div>
-              ))}
-            </div>
-          </section>
-        )}
-
-        {/* =========================================================================
-            SECTION H: SCREENSHOTS AND GALLERY (LIGHTBOX)
-            ========================================================================= */}
-        {media.length > 0 && (
+        {/* SECTION D: SCREENSHOTS & GALLERY */}
+        {galleryItems.length > 0 && (
           <section className="space-y-6 border-t border-neutral-800 pt-8">
             <div className="flex items-center justify-between">
               <div>
                 <div className="text-xs font-mono uppercase tracking-widest text-neutral-400">
-                  05. MEDIA & INTERFACES
+                  02. MEDIA & INTERFACES
                 </div>
                 <h2 className="text-2xl font-bold text-white tracking-tight">
                   Screenshots & Media Gallery
@@ -371,27 +264,24 @@ export const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({ siteConfig
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              {media.map((item, idx) => (
+              {galleryItems.map((item, idx) => (
                 <div
-                  key={item.media_id || idx}
+                  key={idx}
                   onClick={() => openLightbox(idx)}
                   className="group relative cursor-pointer overflow-hidden rounded-lg border border-neutral-800 bg-neutral-900 hover:border-neutral-600 transition-all duration-300"
                 >
                   <SmartImage
-                    src={item.image_url}
+                    src={item.url}
                     alt={item.caption || `${project.project_name} screenshot ${idx + 1}`}
                     fallbackTitle={item.caption || project.project_name}
                     aspectRatioClass="aspect-[16/10]"
                     className="group-hover:scale-105 transition-transform duration-500"
                   />
-                  
-                  {/* Overlay icon */}
                   <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                     <div className="p-3 bg-neutral-950/80 rounded-full text-white border border-neutral-700">
                       <Maximize2 className="w-4 h-4" />
                     </div>
                   </div>
-
                   {item.caption && (
                     <div className="p-3 border-t border-neutral-800/80 bg-neutral-950 text-xs text-neutral-300">
                       {item.caption}
@@ -403,26 +293,7 @@ export const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({ siteConfig
           </section>
         )}
 
-        {/* =========================================================================
-            SECTION I: OUTCOMES (ONLY IF SUPPLIED BY ADMIN)
-            ========================================================================= */}
-        {outcomesSection && outcomesSection.content.trim() !== '' && (
-          <section className="space-y-4 border-t border-neutral-800 pt-8">
-            <div className="text-xs font-mono uppercase tracking-widest text-neutral-400">
-              06. VERIFIED OUTCOMES
-            </div>
-            <h2 className="text-2xl font-bold text-white tracking-tight">
-              {outcomesSection.heading || 'Project Outcomes & Metrics'}
-            </h2>
-            <div className="p-6 bg-neutral-900/40 border border-neutral-800 rounded-lg text-sm text-neutral-300 leading-relaxed">
-              {outcomesSection.content}
-            </div>
-          </section>
-        )}
-
-        {/* =========================================================================
-            SECTION J: RELATED PROJECTS
-            ========================================================================= */}
+        {/* SECTION E: RELATED PROJECTS */}
         {relatedProjects.length > 0 && (
           <section className="space-y-6 border-t border-neutral-800 pt-12">
             <div className="flex items-center justify-between">
@@ -442,7 +313,6 @@ export const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({ siteConfig
                 <ArrowRight className="w-3.5 h-3.5" />
               </Link>
             </div>
-
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {relatedProjects.map((rel) => (
                 <ProjectCard key={rel.project_id} project={rel} />
@@ -451,9 +321,7 @@ export const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({ siteConfig
           </section>
         )}
 
-        {/* =========================================================================
-            SECTION K: INQUIRY CTA
-            ========================================================================= */}
+        {/* SECTION F: INQUIRY CTA */}
         <section className="pt-8">
           <div className="p-8 sm:p-12 rounded-xl bg-neutral-900 border border-neutral-800 space-y-6">
             <div className="text-xs font-mono uppercase tracking-widest text-neutral-400">
@@ -493,9 +361,8 @@ export const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({ siteConfig
 
       </div>
 
-      {/* Lightbox for screenshots and gallery */}
       <Lightbox
-        mediaList={media}
+        items={galleryItems}
         currentIndex={activeMediaIndex}
         isOpen={lightboxOpen}
         onClose={() => setLightboxOpen(false)}

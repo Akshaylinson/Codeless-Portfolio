@@ -1,4 +1,4 @@
-import { Project, ProjectDetail, ProjectMedia, SiteConfig } from '../types/portfolio';
+import { Project, SiteConfig } from '../types/portfolio';
 
 // Local high-fidelity generated asset paths
 export const ASSETS = {
@@ -42,6 +42,10 @@ export const INITIAL_PROJECTS: Project[] = [
     published: true,
     created_date: "2026-03-15",
     sort_order: 1,
+    image_1: ASSETS.codevoice,
+    image_1_caption: "CodeVoice Speech Synthesizer & Acoustic Stream Control Console",
+    image_2: ASSETS.hero,
+    image_2_caption: "Neural Processing Architecture and Audio Pipeline Routing",
   },
   {
     project_id: "PRJ002",
@@ -61,6 +65,8 @@ export const INITIAL_PROJECTS: Project[] = [
     published: true,
     created_date: "2026-02-10",
     sort_order: 2,
+    image_1: ASSETS.aivoa,
+    image_1_caption: "AIVOA Operational Dashboard: Batch Record Validation and Audit Findings",
   },
   {
     project_id: "PRJ003",
@@ -80,6 +86,8 @@ export const INITIAL_PROJECTS: Project[] = [
     published: true,
     created_date: "2026-01-20",
     sort_order: 3,
+    image_1: ASSETS.bizflow,
+    image_1_caption: "BizFlow Omni Intelligent Enterprise Workflow Execution Canvas",
   },
   {
     project_id: "PRJ004",
@@ -99,6 +107,8 @@ export const INITIAL_PROJECTS: Project[] = [
     published: true,
     created_date: "2025-11-14",
     sort_order: 4,
+    image_1: ASSETS.vision,
+    image_1_caption: "VisionSense Edge Real-Time Analytics and Object Detection Monitor",
   },
   {
     project_id: "PRJ005",
@@ -137,199 +147,5 @@ export const INITIAL_PROJECTS: Project[] = [
     published: true,
     created_date: "2025-08-18",
     sort_order: 6,
-  }
-];
-
-export const INITIAL_PROJECT_DETAILS: ProjectDetail[] = [
-  // CodeVoice Details
-  {
-    project_id: "PRJ001",
-    section_type: "overview",
-    heading: "Executive Overview",
-    content: "CodeVoice is an end-to-end voice AI engine designed to solve the latency and unnatural phrasing barriers in traditional voicebots. It connects speech input, cognitive understanding, and neural audio synthesis directly in a streaming pipeline.",
-    sort_order: 1
-  },
-  {
-    project_id: "PRJ001",
-    section_type: "problem",
-    heading: "The Engineering Challenge",
-    content: "Conventional automated voice systems exhibit 1.5–3 second pauses between conversational turns, disrupting dialogue flow and confusing users. Furthermore, voice quality frequently drops when synthesizers handle domain-specific terminology or accented speech.",
-    sort_order: 2
-  },
-  {
-    project_id: "PRJ001",
-    section_type: "solution",
-    heading: "Architecture & Solution",
-    content: "We developed a stream-chunked audio pipeline leveraging optimized ONNX runtimes. Acoustic features are generated on-the-fly while token generation is in flight, reducing round-trip voice latency to under 200 milliseconds.",
-    sort_order: 3
-  },
-  {
-    project_id: "PRJ001",
-    section_type: "features",
-    heading: "Key Capabilities",
-    content: JSON.stringify([
-      "Bidirectional full-duplex conversational audio streaming over WebSockets",
-      "Sub-200ms turnaround time from user sentence completion to synthesized audio playback",
-      "Dynamic prosody, emotion injection, and pacing adjustment",
-      "Custom vocabulary pronunciation dictionaries and acoustic fine-tuning",
-      "Integrated barge-in detection with instant playback cancellation"
-    ]),
-    sort_order: 4
-  },
-  {
-    project_id: "PRJ001",
-    section_type: "outcomes",
-    heading: "Technical Outcomes",
-    content: "Deployed across internal pilot customer support channels with verifiable sub-200ms latency benchmarks and 99.4% speech recognition accuracy under standard acoustic conditions.",
-    sort_order: 5
-  },
-
-  // AIVOA.AI Details
-  {
-    project_id: "PRJ002",
-    section_type: "overview",
-    heading: "Regulatory Quality Assurance",
-    content: "AIVOA.AI is an automated pharmaceutical Quality Management System engineered to digitize critical manufacturing batch records, deviations, and corrective actions (CAPA) with cryptographic audit logging.",
-    sort_order: 1
-  },
-  {
-    project_id: "PRJ002",
-    section_type: "problem",
-    heading: "Compliance Inefficiencies",
-    content: "Paper-based and legacy QMS solutions create lengthy review cycles during batch releases. Manual entry errors can delay critical pharmaceutical shipments and risk non-compliance during regulatory inspections.",
-    sort_order: 2
-  },
-  {
-    project_id: "PRJ002",
-    section_type: "solution",
-    heading: "Digital Verification Matrix",
-    content: "AIVOA.AI introduces structured electronic signatures, automatic timestamp verification, and real-time validation checks during batch execution, ensuring 100% adherence to Good Manufacturing Practice (GMP) protocols.",
-    sort_order: 3
-  },
-  {
-    project_id: "PRJ002",
-    section_type: "features",
-    heading: "Core Specifications",
-    content: JSON.stringify([
-      "21 CFR Part 11 compliant electronic signatures and tamper-evident audit logs",
-      "Automated CAPA routing with configurable multi-level review workflows",
-      "Real-time deviation alerts with severity classification matrix",
-      "Structured batch record generation with PDF/A export validation",
-      "Role-based granular access control with re-authentication prompts"
-    ]),
-    sort_order: 4
-  },
-
-  // BizFlow Omni Details
-  {
-    project_id: "PRJ003",
-    section_type: "overview",
-    heading: "Workflow Orchestration",
-    content: "BizFlow Omni provides an event-driven automation backbone for enterprises seeking to eliminate manual data re-entry between disparate business systems.",
-    sort_order: 1
-  },
-  {
-    project_id: "PRJ003",
-    section_type: "problem",
-    heading: "Operational Bottlenecks",
-    content: "Enterprises frequently run separate CRM, ERP, and inventory platforms, forcing operations teams to spend hundreds of hours re-keying records and resolving synchronization discrepancies.",
-    sort_order: 2
-  },
-  {
-    project_id: "PRJ003",
-    section_type: "solution",
-    heading: "Distributed Execution Architecture",
-    content: "Using durable execution workflows and asynchronous message brokers, BizFlow Omni executes resilient data pipelines that handle network interruptions with zero data loss.",
-    sort_order: 3
-  },
-  {
-    project_id: "PRJ003",
-    section_type: "features",
-    heading: "Platform Features",
-    content: JSON.stringify([
-      "Visual workflow canvas with automated error-recovery branches",
-      "Pre-built enterprise connectors for SAP, Salesforce, and SQL databases",
-      "Intelligent document parsing for incoming purchase orders and invoices",
-      "Detailed step-by-step transaction observability and execution replays"
-    ]),
-    sort_order: 4
-  },
-
-  // VisionSense Edge Details
-  {
-    project_id: "PRJ004",
-    section_type: "overview",
-    heading: "Industrial Edge Intelligence",
-    content: "VisionSense Edge connects directly to IP cameras on manufacturing and logistics floors to provide real-time object classification and perimeter safety alerts.",
-    sort_order: 1
-  },
-  {
-    project_id: "PRJ004",
-    section_type: "problem",
-    heading: "Bandwidth & Privacy Limits",
-    content: "Streaming dozens of 4K video feeds to the cloud for analysis consumes prohibitive bandwidth and introduces latency and security concerns in sensitive manufacturing facilities.",
-    sort_order: 2
-  },
-  {
-    project_id: "PRJ004",
-    section_type: "solution",
-    heading: "On-Premises Edge Acceleration",
-    content: "All inference executes locally on compact hardware accelerators using TensorRT optimization, only transmitting telemetry events and anonymized metadata to the central dashboard.",
-    sort_order: 3
-  },
-  {
-    project_id: "PRJ004",
-    section_type: "features",
-    heading: "Core Features",
-    content: JSON.stringify([
-      "Sub-30ms multi-class object detection and tracking",
-      "Zero internet dependency for mission-critical perimeter monitoring",
-      "Configurable geofencing and alert trigger notifications",
-      "Encrypted event telemetry over lightweight MQTT protocols"
-    ]),
-    sort_order: 4
-  }
-];
-
-export const INITIAL_PROJECT_MEDIA: ProjectMedia[] = [
-  {
-    media_id: "MED001",
-    project_id: "PRJ001",
-    image_url: ASSETS.codevoice,
-    caption: "CodeVoice Speech Synthesizer & Acoustic Stream Control Console",
-    media_type: "screenshot",
-    sort_order: 1
-  },
-  {
-    media_id: "MED002",
-    project_id: "PRJ001",
-    image_url: ASSETS.hero,
-    caption: "Neural Processing Architecture and Audio Pipeline Routing",
-    media_type: "gallery",
-    sort_order: 2
-  },
-  {
-    media_id: "MED003",
-    project_id: "PRJ002",
-    image_url: ASSETS.aivoa,
-    caption: "AIVOA Operational Dashboard: Batch Record Validation and Audit Findings",
-    media_type: "screenshot",
-    sort_order: 1
-  },
-  {
-    media_id: "MED004",
-    project_id: "PRJ003",
-    image_url: ASSETS.bizflow,
-    caption: "BizFlow Omni Intelligent Enterprise Workflow Execution Canvas",
-    media_type: "screenshot",
-    sort_order: 1
-  },
-  {
-    media_id: "MED005",
-    project_id: "PRJ004",
-    image_url: ASSETS.vision,
-    caption: "VisionSense Edge Real-Time Analytics and Object Detection Monitor",
-    media_type: "screenshot",
-    sort_order: 1
   }
 ];

@@ -18,34 +18,12 @@ export interface Project {
   published: boolean;
   created_date: string;
   sort_order: number;
-}
-
-export type SectionType = 
-  | 'overview' 
-  | 'problem' 
-  | 'solution' 
-  | 'features' 
-  | 'architecture' 
-  | 'outcomes' 
-  | 'additional';
-
-export interface ProjectDetail {
-  project_id: string;
-  section_type: SectionType;
-  heading: string;
-  content: string; // Plain text, markdown, or JSON string
-  sort_order: number;
-}
-
-export type MediaType = 'thumbnail' | 'cover' | 'screenshot' | 'gallery';
-
-export interface ProjectMedia {
-  media_id: string;
-  project_id: string;
-  image_url: string;
-  caption: string;
-  media_type: MediaType;
-  sort_order: number;
+  image_1?: string;
+  image_1_caption?: string;
+  image_2?: string;
+  image_2_caption?: string;
+  image_3?: string;
+  image_3_caption?: string;
 }
 
 export interface SiteConfig {
@@ -67,8 +45,6 @@ export interface ApiResponse<T> {
   data?: T;
   projects?: Project[];
   project?: Project;
-  details?: ProjectDetail[];
-  media?: ProjectMedia[];
   site?: Partial<SiteConfig>;
   error?: string;
 }

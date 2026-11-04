@@ -1,10 +1,14 @@
 import React, { useEffect } from 'react';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
-import { ProjectMedia } from '../types/portfolio';
 import { normalizeImageUrl } from '../services/imageUtils';
 
+export interface LightboxItem {
+  url: string;
+  caption?: string;
+}
+
 interface LightboxProps {
-  mediaList: ProjectMedia[];
+  items: LightboxItem[];
   currentIndex: number;
   isOpen: boolean;
   onClose: () => void;
@@ -12,7 +16,7 @@ interface LightboxProps {
 }
 
 export const Lightbox: React.FC<LightboxProps> = ({
-  mediaList,
+  items,
   currentIndex,
   isOpen,
   onClose,
@@ -23,30 +27,25 @@ export const Lightbox: React.FC<LightboxProps> = ({
 
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
-      if (e.key === 'ArrowLeft') {
-        onIndexChange((currentIndex - 1 + mediaList.length) % mediaList.length);
-      }
-      if (e.key === 'ArrowRight') {
-        onIndexChange((currentIndex + 1) % mediaList.length);
-      }
+      if (e.key === 'ArrowLeft') onIndexChange((currentIndex - 1 + items.length) % items.length);
+      if (e.key === 'ArrowRight') onIndexChange((currentIndex + 1) % items.length);
     };
 
     document.body.style.overflow = 'hidden';
     window.addEventListener('keydown', handleKeyDown);
-
     return () => {
       document.body.style.overflow = '';
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [isOpen, currentIndex, mediaList.length, onClose, onIndexChange]);
+  }, [isOpen, currentIndex, items.length, onClose, onIndexChange]);
 
-  if (!isOpen || mediaList.length === 0) return null;
+  if (!isOpen || items.length === 0) return null;
 
-  const currentMedia = mediaList[currentIndex];
-  const directUrl = normalizeImageUrl(currentMedia?.image_url);
+  const current = items[currentIndex];
+  const directUrl = normalizeImageUrl(current?.url);
 
   return (
-    <div 
+    <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 backdrop-blur-md"
       role="dialog"
       aria-modal="true"
@@ -55,7 +54,7 @@ export const Lightbox: React.FC<LightboxProps> = ({
       {/* Top action bar */}
       <div className="absolute top-4 right-4 z-50 flex items-center gap-4">
         <span className="text-xs font-mono text-neutral-400">
-          {currentIndex + 1} / {mediaList.length}
+          {currentIndex + 1} / {items.length}
         </span>
         <button
           onClick={onClose}
@@ -67,9 +66,9 @@ export const Lightbox: React.FC<LightboxProps> = ({
       </div>
 
       {/* Navigation Previous */}
-      {mediaList.length > 1 && (
+      {items.length > 1 && (
         <button
-          onClick={() => onIndexChange((currentIndex - 1 + mediaList.length) % mediaList.length)}
+          onClick={() => onIndexChange((currentIndex - 1 + items.length) % items.length)}
           className="absolute left-4 top-1/2 -translate-y-1/2 p-3 text-neutral-400 hover:text-white bg-neutral-900/60 rounded-full border border-neutral-800 hover:bg-neutral-800 transition-colors z-50"
           aria-label="Previous image"
         >
@@ -81,20 +80,20 @@ export const Lightbox: React.FC<LightboxProps> = ({
       <div className="max-w-6xl max-h-[85vh] p-4 flex flex-col items-center">
         <img
           src={directUrl}
-          alt={currentMedia.caption || 'Project visual'}
+          alt={current.caption || 'Project visual'}
           className="max-h-[75vh] max-w-full object-contain rounded-md border border-neutral-800 shadow-2xl"
         />
-        {currentMedia.caption && (
+        {current.caption && (
           <p className="mt-4 text-center text-sm text-neutral-300 max-w-2xl font-medium">
-            {currentMedia.caption}
+            {current.caption}
           </p>
         )}
       </div>
 
       {/* Navigation Next */}
-      {mediaList.length > 1 && (
+      {items.length > 1 && (
         <button
-          onClick={() => onIndexChange((currentIndex + 1) % mediaList.length)}
+          onClick={() => onIndexChange((currentIndex + 1) % items.length)}
           className="absolute right-4 top-1/2 -translate-y-1/2 p-3 text-neutral-400 hover:text-white bg-neutral-900/60 rounded-full border border-neutral-800 hover:bg-neutral-800 transition-colors z-50"
           aria-label="Next image"
         >
