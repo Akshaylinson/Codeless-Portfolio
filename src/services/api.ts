@@ -118,11 +118,11 @@ class PortfolioApiService {
       }
       throw new Error(json.error || 'Invalid projects payload');
     } catch (err) {
-      console.warn('[Portfolio API] Failed to fetch live projects, using seed data:', err);
-      this.inMemoryProjects = INITIAL_PROJECTS.filter(p => p.published);
+      console.error('[Portfolio API] getProjects failed:', err);
+      this.inMemoryProjects = [];
       this.lastFetchTimestamp = now;
       this.activeSource = 'fallback';
-      return this.inMemoryProjects;
+      return [];
     }
   }
 

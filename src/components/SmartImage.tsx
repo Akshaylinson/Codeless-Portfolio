@@ -22,11 +22,10 @@ export const SmartImage: React.FC<SmartImageProps> = ({
 
   const cleanSrc = normalizeImageUrl(src);
 
-  // If no source or error occurred, render styled fallback SVG
   if (!cleanSrc || hasError) {
     const fallbackDataUri = getFallbackImageSvg(fallbackTitle || alt);
     return (
-      <div className={`relative overflow-hidden bg-neutral-900 border border-neutral-800 flex items-center justify-center ${aspectRatioClass} ${className}`}>
+      <div className={`relative overflow-hidden bg-neutral-900 ${aspectRatioClass}`}>
         <img
           src={fallbackDataUri}
           alt={alt}
@@ -39,18 +38,15 @@ export const SmartImage: React.FC<SmartImageProps> = ({
   }
 
   return (
-    <div className={`relative overflow-hidden bg-neutral-900 ${aspectRatioClass} ${className}`}>
-      {/* Loading Skeleton */}
+    <div className={`relative overflow-hidden bg-neutral-900 ${aspectRatioClass}`}>
       {!isLoaded && (
         <div className="absolute inset-0 bg-neutral-900 animate-pulse flex items-center justify-center">
           <div className="w-6 h-6 border-2 border-neutral-700 border-t-neutral-400 rounded-full animate-spin" />
         </div>
       )}
-
       <img
         src={cleanSrc}
         alt={alt}
-        referrerPolicy="no-referrer"
         loading="lazy"
         onLoad={() => setIsLoaded(true)}
         onError={() => setHasError(true)}

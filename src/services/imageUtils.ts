@@ -8,31 +8,16 @@
  */
 
 export function normalizeImageUrl(url?: string | null): string {
-  if (!url || typeof url !== 'string' || !url.trim()) {
-    return '';
-  }
+  if (!url || typeof url !== 'string' || !url.trim()) return '';
 
   const trimmed = url.trim();
 
-  // Handle Google Drive links
-  // Pattern 1: https://drive.google.com/file/d/{FILE_ID}/view...
-  const driveFileMatch = trimmed.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
-  if (driveFileMatch && driveFileMatch[1]) {
-    const fileId = driveFileMatch[1];
-    // Google's high-speed thumbnail / direct content CDN
-    return `https://lh3.googleusercontent.com/d/${fileId}`;
-  }
-
-  // Pattern 2: https://drive.google.com/open?id={FILE_ID} or ?id={FILE_ID}
-  const driveIdMatch = trimmed.match(/[?&]id=([a-zA-Z0-9_-]+)/);
-  if (trimmed.includes('drive.google.com') && driveIdMatch && driveIdMatch[1]) {
-    const fileId = driveIdMatch[1];
-    return `https://lh3.googleusercontent.com/d/${fileId}`;
-  }
-
-  // Pattern 3: https://drive.google.com/uc?export=view&id={FILE_ID}
-  if (trimmed.includes('drive.google.com/uc')) {
-    const fileIdMatch = trimmed.match(/id=([a-zA-Z0-9_-]+)/);
+  // Only transform Google Drive share/open/uc URLs into direct stream URLs.
+  // All other URLs (GitHub raw, CDN, custom domains, etc.) are returned as-is.
+  if (trimmed.includes('drive.google.com')) {
+    const fileIdMatch =
+      trimmed.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) ||
+      trimmed.match(/[?&]id=([a-zA-Z0-9_-]+)/);
     if (fileIdMatch && fileIdMatch[1]) {
       return `https://lh3.googleusercontent.com/d/${fileIdMatch[1]}`;
     }

@@ -101,14 +101,15 @@ export const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({ siteConfig
     );
   }
 
-  // Build gallery from image_1/2/3 — only include non-empty URLs
+  // Build gallery — only include images with a non-empty URL string
+  const isValidUrl = (v?: string) => typeof v === 'string' && v.trim() !== '';
   const galleryItems: LightboxItem[] = (
     [
-      project.image_1 ? { url: project.image_1, caption: project.image_1_caption } : null,
-      project.image_2 ? { url: project.image_2, caption: project.image_2_caption } : null,
-      project.image_3 ? { url: project.image_3, caption: project.image_3_caption } : null,
+      isValidUrl(project.image_1) ? { url: project.image_1!, caption: project.image_1_caption } : null,
+      isValidUrl(project.image_2) ? { url: project.image_2!, caption: project.image_2_caption } : null,
+      isValidUrl(project.image_3) ? { url: project.image_3!, caption: project.image_3_caption } : null,
     ] as Array<LightboxItem | null>
-  ).filter((item): item is LightboxItem => item !== null && item.url.trim() !== '');
+  ).filter((item): item is LightboxItem => item !== null);
 
   const openLightbox = (index: number) => {
     setActiveMediaIndex(index);
@@ -295,35 +296,7 @@ export const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({ siteConfig
           </section>
         )}
 
-        {/* SECTION E: RELATED PROJECTS */}
-        {relatedProjects.length > 0 && (
-          <section className="space-y-6 border-t border-neutral-800 pt-12">
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="text-xs font-mono uppercase tracking-widest text-neutral-400">
-                  SYSTEM DIRECTORY
-                </div>
-                <h2 className="text-2xl font-bold text-white tracking-tight">
-                  Related Projects
-                </h2>
-              </div>
-              <Link
-                to="/projects"
-                className="text-xs font-semibold text-white hover:text-neutral-300 inline-flex items-center gap-1"
-              >
-                <span>View All</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </Link>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {relatedProjects.map((rel) => (
-                <ProjectCard key={rel.project_id} project={rel} />
-              ))}
-            </div>
-          </section>
-        )}
-
-        {/* SECTION F: INQUIRY CTA */}
+        {/* SECTION E: INQUIRY CTA */}
         <section className="pt-8">
           <div className="p-8 sm:p-12 rounded-xl bg-neutral-900 border border-neutral-800 space-y-6">
             <div className="text-xs font-mono uppercase tracking-widest text-neutral-400">
@@ -348,20 +321,52 @@ export const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({ siteConfig
               >
                 Request Consultation
               </Link>
-              <a
-                href={`https://wa.me/${siteConfig.whatsapp.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(`Hi Codeless Technologies, I saw ${project.project_name} on your portfolio and would like to discuss a similar project.`)}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-6 py-3 text-xs font-semibold text-neutral-300 hover:text-white border border-neutral-700 hover:border-neutral-600 rounded-md transition-colors inline-flex items-center gap-2"
-              >
-                <MessageSquare className="w-3.5 h-3.5 text-emerald-400" />
-                <span>WhatsApp</span>
-              </a>
+              {siteConfig.whatsapp && (
+                <a
+                  href={`https://wa.me/${siteConfig.whatsapp.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(`Hi Codeless Technologies, I saw ${project.project_name} on your portfolio and would like to discuss a similar project.`)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-6 py-3 text-xs font-semibold text-neutral-300 hover:text-white border border-neutral-700 hover:border-neutral-600 rounded-md transition-colors inline-flex items-center gap-2"
+                >
+                  <MessageSquare className="w-3.5 h-3.5 text-emerald-400" />
+                  <span>WhatsApp</span>
+                </a>
+              )}
             </div>
           </div>
         </section>
 
       </div>
+
+      {/* SECTION F: RELATED PROJECTS — full-width band below CTA */}
+      {relatedProjects.length > 0 && (
+        <div className="border-t border-neutral-800 bg-neutral-950/60 py-16">
+          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="text-xs font-mono uppercase tracking-widest text-neutral-400">
+                  SYSTEM DIRECTORY
+                </div>
+                <h2 className="text-2xl font-bold text-white tracking-tight">
+                  Related Projects
+                </h2>
+              </div>
+              <Link
+                to="/projects"
+                className="text-xs font-semibold text-white hover:text-neutral-300 inline-flex items-center gap-1"
+              >
+                <span>View All</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {relatedProjects.map((rel) => (
+                <ProjectCard key={rel.project_id} project={rel} />
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
 
       <Lightbox
         items={galleryItems}
