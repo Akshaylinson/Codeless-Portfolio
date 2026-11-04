@@ -26,6 +26,10 @@ export default function App() {
 
   useEffect(() => {
     portfolioApi.getSiteConfig().then(setSiteConfig);
+    const interval = setInterval(() => {
+      portfolioApi.getSiteConfig(true).then(setSiteConfig);
+    }, 60_000);
+    return () => clearInterval(interval);
   }, []);
 
   return (
