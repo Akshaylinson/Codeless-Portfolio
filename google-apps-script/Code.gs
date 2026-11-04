@@ -1,6 +1,6 @@
 /**
  * CODELESS TECHNOLOGIES – DYNAMIC PORTFOLIO API
- * 
+ *
  * Google Apps Script Web App (Read-Only JSON API)
  * Spreadsheet Backend: Google Sheets (2 worksheets: PROJECTS, SITE_CONFIG)
  * Frontend Target: https://portfolio.codelessai.in (GitHub Pages)
@@ -10,14 +10,15 @@
  * 2. Click: Extensions → Apps Script
  * 3. Replace Code.gs with this file.
  * 4. Run setupSpreadsheet() ONCE to create worksheets.
- * 5. Click: Deploy → New deployment → Web app
+ * 5. Run seedProjects() ONCE to populate the 6 demo projects.
+ * 6. Click: Deploy → New deployment → Web app
  *    - Execute as: Me
  *    - Who has access: Anyone
- * 6. Copy the Web App URL into your .env or the in-app Admin Sync modal.
+ * 7. Copy the Web App URL into your .env or the in-app Admin Sync modal.
  */
 
 /**
- * Run ONCE from the Apps Script editor to initialize worksheets.
+ * Run ONCE to create the PROJECTS and SITE_CONFIG worksheets.
  * Safe to re-run: skips sheets that already exist.
  */
 function setupSpreadsheet() {
@@ -78,7 +79,6 @@ function setupSpreadsheet() {
     created.push(name);
   }
 
-  // Remove default blank Sheet1 if present
   var defaultSheet = ss.getSheetByName('Sheet1');
   if (defaultSheet && ss.getSheets().length > 1) {
     ss.deleteSheet(defaultSheet);
@@ -88,6 +88,122 @@ function setupSpreadsheet() {
   if (created.length) msg += 'Created: ' + created.join(', ') + '.\n';
   if (skipped.length) msg += 'Already existed (skipped): ' + skipped.join(', ') + '.';
   Logger.log('Setup Complete: ' + (msg || 'Nothing to do.'));
+}
+
+/**
+ * Run ONCE to seed the PROJECTS sheet with the 6 demo projects.
+ * Safe to re-run: skips rows whose project_id already exists.
+ */
+function seedProjects() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = ss.getSheetByName('PROJECTS');
+  if (!sheet) {
+    Logger.log('PROJECTS sheet not found. Run setupSpreadsheet() first.');
+    return;
+  }
+
+  var colMap = [
+    'project_id','slug','project_name','tagline','short_description','full_description',
+    'category','technologies','thumbnail_image','cover_image','live_url','github_url',
+    'status','featured','published','created_date','sort_order',
+    'image_1','image_1_caption','image_2','image_2_caption','image_3','image_3_caption'
+  ];
+
+  var headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0]
+    .map(function(h) { return String(h).trim(); });
+
+  var existingIds = [];
+  var lastRow = sheet.getLastRow();
+  if (lastRow > 1) {
+    var idCol = headers.indexOf('project_id') + 1;
+    var existingData = sheet.getRange(2, idCol, lastRow - 1, 1).getValues();
+    existingIds = existingData.map(function(r) { return String(r[0]).trim(); });
+  }
+
+  var projects = [
+    [
+      'PRJ001', 'codevoice', 'CodeVoice',
+      'Intelligent AI Voice Platform & Conversational Speech Engine',
+      'Real-time conversational voice synthesis and agent framework delivering ultra-low-latency bidirectional speech interactions.',
+      'CodeVoice is Codeless Technologies\' flagship conversational speech technology platform. Built for latency-critical telephony and customer support automation, it combines custom streaming acoustic neural models with sub-200ms round-trip speech synthesis, real-time sentiment extraction, and seamless CRM integrations.',
+      'AI & Voice Technology', 'Python, FastAPI, React, ONNX, WebSockets, PyTorch',
+      '', '', 'https://voice.codelessai.in', 'https://github.com/codelesstechnologies/codevoice-core',
+      'Development', 'TRUE', 'TRUE', '2026-03-15', 1,
+      '', '', '', '', '', ''
+    ],
+    [
+      'PRJ002', 'aivoa-pharmaceutical-qms', 'AIVOA.AI',
+      'Enterprise Pharmaceutical Quality Management & GMP Compliance',
+      'Intelligent electronic batch records, CAPA workflow automation, and 21 CFR Part 11 compliant audit verification for life sciences.',
+      'AIVOA.AI represents a leap forward in pharmaceutical quality and validation systems. Engineered in strict compliance with FDA 21 CFR Part 11 and EU Annex 11, it automates deviation tracking, audit trails, and automated batch release protocol verification through verifiable data integrity checks.',
+      'Pharmaceutical Software', 'TypeScript, Next.js, PostgreSQL, Tailwind CSS, AuditLog21, Python',
+      '', '', 'https://aivoa.codelessai.in', '',
+      'Production', 'TRUE', 'TRUE', '2026-02-10', 2,
+      '', '', '', '', '', ''
+    ],
+    [
+      'PRJ003', 'bizflow-automation-engine', 'BizFlow Omni',
+      'Autonomous Enterprise Process Automation & Orchestration',
+      'Autonomous workflow execution engine linking legacy enterprise databases, third-party ERPs, and AI task planners.',
+      'BizFlow Omni solves enterprise data silos by automating complex multi-stage approvals, document parsing, invoice reconciliation, and data synchronization between SAP, Salesforce, and bespoke internal systems.',
+      'Business Automation', 'Go, React, Redis, Temporal, Docker, REST API',
+      '', '', 'https://bizflow.codelessai.in', 'https://github.com/codelesstechnologies/bizflow-engine',
+      'Production', 'TRUE', 'TRUE', '2026-01-20', 3,
+      '', '', '', '', '', ''
+    ],
+    [
+      'PRJ004', 'visionsense-edge-analytics', 'VisionSense Edge',
+      'Real-Time Computer Vision & Industrial Edge Telemetry',
+      'High-speed edge camera inference platform for defect inspection, facility safety monitoring, and vehicle telemetry.',
+      'VisionSense Edge deploys quantized computer vision models onto edge gateway hardware, achieving 30+ FPS video analysis with zero external cloud dependencies. Designed for manufacturing plants and logistics facilities.',
+      'Computer Vision & Edge AI', 'C++, Python, TensorRT, WebRTC, React, Tailwind CSS',
+      '', '', '', 'https://github.com/codelesstechnologies/visionsense',
+      'Development', 'TRUE', 'TRUE', '2025-11-14', 4,
+      '', '', '', '', '', ''
+    ],
+    [
+      'PRJ005', 'synthetix-pharmadocs', 'Synthetix PharmaDocs',
+      'Regulatory Dossier & Submission Automation Platform',
+      'Automated eCTD regulatory dossier compiler and chemical composition validation engine for pharmaceutical submissions.',
+      'Synthetix PharmaDocs simplifies the preparation of drug master files (DMF) and investigational new drug (IND) dossiers. Features automated cross-reference verification and regulatory terminology reconciliation.',
+      'Pharmaceutical Software', 'Python, FastAPI, React, NLP, Elasticsearch',
+      '', '', 'https://pharmadocs.codelessai.in', '',
+      'Beta', 'FALSE', 'TRUE', '2025-10-05', 5,
+      '', '', '', '', '', ''
+    ],
+    [
+      'PRJ006', 'novaspeech-multilingual-tts', 'NovaSpeech TTS',
+      'Ultra-Low Latency Multilingual Neural Voice Generator',
+      'High-fidelity neural text-to-speech API supporting 24+ languages with streaming acoustic pitch and pacing controls.',
+      'NovaSpeech generates lifelike human speech from text streams with studio acoustic warmth. Used by interactive kiosks, audio-book publishers, and accessibility tools.',
+      'AI & Voice Technology', 'Rust, PyTorch, gRPC, Docker, React',
+      '', '', 'https://novaspeech.codelessai.in', 'https://github.com/codelesstechnologies/novaspeech',
+      'Live', 'FALSE', 'TRUE', '2025-08-18', 6,
+      '', '', '', '', '', ''
+    ]
+  ];
+
+  var added = [];
+  var skipped = [];
+
+  projects.forEach(function(row) {
+    var projectId = String(row[0]);
+    if (existingIds.indexOf(projectId) !== -1) {
+      skipped.push(projectId);
+      return;
+    }
+    var orderedRow = headers.map(function(h) {
+      var idx = colMap.indexOf(h);
+      return idx !== -1 ? row[idx] : '';
+    });
+    sheet.appendRow(orderedRow);
+    added.push(projectId);
+  });
+
+  Logger.log(
+    'Seed complete. Added: [' + added.join(', ') + ']. ' +
+    'Skipped (already exist): [' + skipped.join(', ') + '].'
+  );
 }
 
 function doGet(e) {
@@ -163,7 +279,6 @@ function getPublishedProjectsData(ss) {
       item.created_date = Utilities.formatDate(item.created_date, Session.getScriptTimeZone(), 'yyyy-MM-dd');
     }
 
-    // Normalize optional image fields to empty string if blank
     ['image_1', 'image_1_caption', 'image_2', 'image_2_caption', 'image_3', 'image_3_caption'].forEach(function(key) {
       item[key] = item[key] ? String(item[key]).trim() : '';
     });
