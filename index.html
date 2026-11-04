@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Codeless Technologies – Building Intelligent Digital Solutions</title>
+    <meta name="description" content="Codeless Technologies builds intelligent software, AI-powered platforms, and automation solutions that help businesses simplify operations and accelerate innovation." />
+    <meta name="keywords" content="Codeless Technologies, AI software development, Artificial Intelligence, Conversational AI, Voice Agents, SaaS products, Business Process Automation, Pharmaceutical QMS" />
+    <meta name="author" content="Codeless Technologies" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://portfolio.codelessai.in/" />
+    <meta property="og:title" content="Codeless Technologies – Building Intelligent Digital Solutions" />
+    <meta property="og:description" content="Engineering intelligence. Explore AI products, enterprise platforms, and automation systems built by Codeless Technologies." />
+    <meta property="og:site_name" content="Codeless Technologies Portfolio" />
+    <meta property="og:image" content="https://portfolio.codelessai.in/og-image.jpg" />
+
+    <!-- Twitter / X -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Codeless Technologies – Building Intelligent Digital Solutions" />
+    <meta name="twitter:description" content="Engineering intelligence. Explore AI products, enterprise platforms, and automation systems built by Codeless Technologies." />
+
+    <link rel="canonical" href="https://portfolio.codelessai.in/" />
+
+    <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- GitHub Pages SPA Redirect Handling (clean URLs restore from 404.html) -->
+    <script>
+      (function(l) {
+        if (l.search[1] === '/' ) {
+          var decoded = l.search.slice(1).split('&').map(function(s) { 
+            return s.replace(/~and~/g, '&')
+          }).join('?');
+          window.history.replaceState(null, null,
+              l.pathname.slice(0, -1) + decoded + l.hash
+          );
+        }
+      }(window.location))
+    </script>
+
+    <!-- Schema.org Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Codeless Technologies",
+      "url": "https://portfolio.codelessai.in",
+      "logo": "https://portfolio.codelessai.in/logo.png",
+      "description": "AI-driven technology company building intelligent software, innovative SaaS products, and business automation systems.",
+      "sameAs": [
+        "https://www.linkedin.com/company/codeless-technologies",
+        "https://github.com/codelesstechnologies"
+      ]
+    }
+    </script>
+  </head>
+  <body class="bg-neutral-950 text-neutral-100 antialiased selection:bg-neutral-800 selection:text-white min-h-screen">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+

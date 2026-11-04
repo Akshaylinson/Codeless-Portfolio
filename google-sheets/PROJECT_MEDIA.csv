@@ -1,0 +1,6 @@
+media_id,project_id,image_url,caption,media_type,sort_order
+MED001,PRJ001,https://drive.google.com/file/d/sample_media_001/view,CodeVoice Speech Synthesizer & Acoustic Stream Control Console,screenshot,1
+MED002,PRJ001,https://drive.google.com/file/d/sample_media_002/view,Neural Processing Architecture and Audio Pipeline Routing,gallery,2
+MED003,PRJ002,https://drive.google.com/file/d/sample_media_003/view,AIVOA Operational Dashboard: Batch Record Validation and Audit Findings,screenshot,1
+MED004,PRJ003,https://drive.google.com/file/d/sample_media_004/view,BizFlow Omni Intelligent Enterprise Workflow Execution Canvas,screenshot,1
+MED005,PRJ004,https://drive.google.com/file/d/sample_media_005/view,VisionSense Edge Real-Time Analytics and Object Detection Monitor,screenshot,1
