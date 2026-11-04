@@ -12,6 +12,7 @@ export const INITIAL_SITE_CONFIG: SiteConfig = {
   logo_url: "",
   portfolio_title: "Codeless Technologies | Engineering Intelligence",
   contact_cta_text: "Looking to develop an AI-powered application, automate your business processes, or build a custom software solution? Let's discuss your requirements.",
+  hero_image: "",
 };
 
 export const INITIAL_PROJECTS: Project[] = [];

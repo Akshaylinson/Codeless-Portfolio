@@ -25,7 +25,10 @@ export default function App() {
   const [siteConfig, setSiteConfig] = useState<SiteConfig>(INITIAL_SITE_CONFIG);
 
   useEffect(() => {
-    portfolioApi.getSiteConfig().then(setSiteConfig);
+    portfolioApi.getSiteConfig().then((config) => {
+      console.log('[SiteConfig] hero_image:', config.hero_image);
+      setSiteConfig(config);
+    });
     const interval = setInterval(() => {
       portfolioApi.getSiteConfig(true).then(setSiteConfig);
     }, 60_000);
