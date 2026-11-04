@@ -38,6 +38,7 @@ export interface SiteConfig {
   logo_url: string;
   portfolio_title: string;
   contact_cta_text: string;
+  hero_image: string;
 }
 
 export interface ApiResponse<T> {

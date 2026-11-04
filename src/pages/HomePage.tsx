@@ -5,7 +5,7 @@ import { Project, SiteConfig } from '../types/portfolio';
 import { portfolioApi } from '../services/api';
 import { ProjectCard } from '../components/ProjectCard';
 import { SmartImage } from '../components/SmartImage';
-const HERO_IMAGE = '/src/assets/images/hero_ai_platform_1793785173723.jpg';
+
 
 interface HomePageProps {
   siteConfig: SiteConfig;
@@ -103,7 +103,7 @@ export const HomePage: React.FC<HomePageProps> = ({ siteConfig }) => {
             <div className="lg:col-span-5">
               <div className="relative rounded-xl overflow-hidden border border-neutral-800 bg-neutral-900 shadow-2xl">
                 <SmartImage
-                  src={HERO_IMAGE}
+                  src={siteConfig.hero_image || '/src/assets/images/hero_ai_platform_1793785173723.jpg'}
                   alt="Codeless Technologies AI Computing Architecture"
                   fallbackTitle="AI Architecture"
                   aspectRatioClass="aspect-[16/11]"
