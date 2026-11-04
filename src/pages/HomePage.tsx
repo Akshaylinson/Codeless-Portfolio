@@ -108,11 +108,7 @@ export const HomePage: React.FC<HomePageProps> = ({ siteConfig }) => {
                   alt="Codeless Technologies AI Computing Architecture"
                   className="w-full h-auto block"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-neutral-950/80 via-transparent to-transparent pointer-events-none" />
-                <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between text-xs font-mono text-neutral-300 pointer-events-none">
-                  <span>NEURAL COMPUTE PLATFORM</span>
-                  <span className="text-neutral-500">v2.4 CORE</span>
-                </div>
+
               </div>
             </div>
 
