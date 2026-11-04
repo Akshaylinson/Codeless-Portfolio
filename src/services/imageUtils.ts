@@ -19,7 +19,7 @@ export function normalizeImageUrl(url?: string | null): string {
       trimmed.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) ||
       trimmed.match(/[?&]id=([a-zA-Z0-9_-]+)/);
     if (fileIdMatch && fileIdMatch[1]) {
-      return `https://lh3.googleusercontent.com/d/${fileIdMatch[1]}`;
+      return `https://drive.google.com/uc?export=view&id=${fileIdMatch[1]}`;
     }
   }
 

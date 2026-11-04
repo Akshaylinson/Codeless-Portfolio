@@ -17,10 +17,14 @@ export const SmartImage: React.FC<SmartImageProps> = ({
   aspectRatioClass = 'aspect-[16/9]',
   ...rest
 }) => {
+  const cleanSrc = normalizeImageUrl(src);
   const [hasError, setHasError] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
 
-  const cleanSrc = normalizeImageUrl(src);
+  React.useEffect(() => {
+    setHasError(false);
+    setIsLoaded(false);
+  }, [cleanSrc]);
 
   if (!cleanSrc || hasError) {
     const fallbackDataUri = getFallbackImageSvg(fallbackTitle || alt);
